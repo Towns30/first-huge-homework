@@ -3,7 +3,12 @@
 
 #include <cstdlib>
 #include <iostream>
-
+int count_map[50][50] = {0};//此地图用于计数，辅助初始化地图，地雷在此地图里被赋值1，其余位置赋值0，这样方便对周围8个格子值求和
+char map_printed[50][50] = {0};/*此地图为了PrintMap()函数而定义，此地图里存储的就是打印出来的地图，
+未被访问就是'?'，对于已被访问的格子，'x'代表把非地雷标记为雷或者访问了地雷格，'@'代表标记地雷且正确，数字代表周围一圈有多少地雷*/
+char real_map[50][50] = {0};//此地图代表真正的地图，其中'm'代表地雷，而非地雷格里的数字代表周围一圈有多少地雷
+int column_back = -1, column_forward = 1, row_back = -1, row_forward = 1;/*back和forward代表着遍历行和列时需要回退和前进多少
+也就是在[i + row_back, i + row_forward]与[j + column_back, j + column_forward]进行遍历*/
 /*
  * You may need to define some global variables for the information of the game map here.
  * Although we don't encourage to use global variables in real cpp projects, you may have to use them because the use of
@@ -12,7 +17,7 @@
  */
 int rows;         // The count of rows of the game map. You MUST NOT modify its name.
 int columns;      // The count of columns of the game map. You MUST NOT modify its name.
-int total_mines;  // The count of mines of the game map. You MUST NOT modify its name. You should initialize this
+int total_mines;  // The count of mines of the game map. You MUST NOT modify its name. You should initialize this（需要初始化）
                   // variable in function InitMap. It will be used in the advanced task.
 int game_state;  // The state of the game, 0 for continuing, 1 for winning, -1 for losing. You MUST NOT modify its name.
 
@@ -28,8 +33,28 @@ int game_state;  // The state of the game, 0 for continuing, 1 for winning, -1 f
  * where X stands for a mine block and . stands for a normal block. After executing this function, your game map
  * would be initialized, with all the blocks unvisited.
  */
-void InitMap() {
+void InitMap()//先生成count_map,再生成real_map和初始化map_printed
+{
+  char a;
   std::cin >> rows >> columns;
+  for (int i = 0; i <= columns - 1; i++)
+  {
+    for (int j = 0; j <= rows - 1; j++)
+    {
+      std::cin >> a;
+      if (a == 'x')
+      {
+        count_map[i][j] = 1;
+      }
+    }
+  }
+  for (int i = 0; i <= columns - 1; i++)
+  {
+    for (int j = 0; j <= rows - 1; j++)
+    {
+      column_back = 
+    }
+  }
   // TODO (student): Implement me!
 }
 
@@ -63,7 +88,8 @@ void InitMap() {
  *
  * @note For invalid operation, you should not do anything.
  */
-void VisitBlock(int r, int c) {
+void VisitBlock(int r, int c) 
+{
   // TODO (student): Implement me!
 }
 
@@ -100,7 +126,8 @@ void VisitBlock(int r, int c) {
  *
  * @note For invalid operation, you should not do anything.
  */
-void MarkMine(int r, int c) {
+void MarkMine(int r, int c) 
+{
   // TODO (student): Implement me!
 }
 
@@ -120,7 +147,8 @@ void MarkMine(int r, int c) {
  *     01@
  * And the game ends (and player wins).
  */
-void AutoExplore(int r, int c) {
+void AutoExplore(int r, int c) 
+{
   // TODO (student): Implement me!
 }
 
@@ -133,7 +161,8 @@ void AutoExplore(int r, int c) {
  *
  * @note If the player wins, we consider that ALL mines are correctly marked.
  */
-void ExitGame() {
+void ExitGame() 
+{
   // TODO (student): Implement me!
   exit(0);  // Exit the game immediately
 }
@@ -162,7 +191,8 @@ void ExitGame() {
  *
  * @note Use std::cout to print the game map, especially when you want to try the advanced task!!!
  */
-void PrintMap() {
+void PrintMap() 
+{
   // TODO (student): Implement me!
 }
 
