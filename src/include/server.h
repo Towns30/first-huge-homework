@@ -52,7 +52,8 @@ void InitMap()//先生成count_map,再生成real_map和初始化map_printed
   {
     for (int j = 0; j <= rows - 1; j++)
     {
-      column_back = 
+      column_back = (i = 0)? 0 : -1;
+      column_forward = (i = columns - 1)? 0 : 1;
     }
   }
   // TODO (student): Implement me!
