@@ -1,0 +1,4 @@
+/home/tangz/first-huge-homework/src/build/CMakeFiles/server.dir
+/home/tangz/first-huge-homework/src/build/CMakeFiles/client.dir
+/home/tangz/first-huge-homework/src/build/CMakeFiles/edit_cache.dir
+/home/tangz/first-huge-homework/src/build/CMakeFiles/rebuild_cache.dir

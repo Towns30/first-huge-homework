@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/tangz/first-huge-homework/src/build",
+  "command": "/usr/bin/g++  -I/home/tangz/first-huge-homework/src/include -g -std=gnu++17 -o CMakeFiles/server.dir/basic.o -c /home/tangz/first-huge-homework/src/basic.cpp",
+  "file": "/home/tangz/first-huge-homework/src/basic.cpp",
+  "output": "CMakeFiles/server.dir/basic.o"
+},
+{
+  "directory": "/home/tangz/first-huge-homework/src/build",
+  "command": "/usr/bin/g++  -I/home/tangz/first-huge-homework/src/include -g -std=gnu++17 -o CMakeFiles/client.dir/advanced.o -c /home/tangz/first-huge-homework/src/advanced.cpp",
+  "file": "/home/tangz/first-huge-homework/src/advanced.cpp",
+  "output": "CMakeFiles/client.dir/advanced.o"
+}
+]
