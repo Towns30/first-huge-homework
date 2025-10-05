@@ -7,8 +7,6 @@ int count_map[50][50] = {0};//此地图用于计数，辅助初始化地图，�
 char map_printed[50][50];/*此地图为了PrintMap()函数而定义，此地图里存储的就是打印出来的地图，
 未被访问就是'?'，对于已被访问的格子，'x'代表把非地雷标记为雷或者访问了地雷格，'@'代表标记地雷且正确，数字代表周围一圈有多少地雷*/
 char real_map[50][50];//此地图代表真正的地图，其中'm'代表地雷，而非地雷格里的数字代表周围一圈有多少地雷
-int column_back = -1, column_forward = 1, row_back = -1, row_forward = 1;/*back和forward代表着遍历行和列时需要回退和前进多少
-也就是在[i + row_back, i + row_forward]与[j + column_back, j + column_forward]进行遍历*/
 /*
  * You may need to define some global variables for the information of the game map here.
  * Although we don't encourage to use global variables in real cpp projects, you may have to use them because the use of
@@ -36,6 +34,10 @@ int marked_mine_count = 0;//玩家判定正确的地雷格子数
  */
 void InitMap()//先生成count_map,再生成real_map和初始化map_printed
 {
+  int column_back = -1, column_forward = 1, row_back = -1, row_forward = 1;/*back和forward代表着遍历行和列时需要回退和前进多少
+  也就是在[i + row_back, i + row_forward]与[j + column_back, j + column_forward]进行遍历*/
+  char a;
+  std::cin >> rows >> columns;
   for (int i = 0; i <= rows - 1; i++)
   {
     for (int j = 0; j <= columns - 1; j++)
@@ -43,8 +45,6 @@ void InitMap()//先生成count_map,再生成real_map和初始化map_printed
       real_map[i][j] = '0';
     }
   }
-  char a;
-  std::cin >> rows >> columns;
   for (int i = 0; i <= rows - 1; i++)
   {
     for (int j = 0; j <= columns - 1; j++)
@@ -67,10 +67,10 @@ void InitMap()//先生成count_map,再生成real_map和初始化map_printed
       }
       else 
       {
-        row_back = (i = 0)? 0 : -1;
-        row_forward = (i = rows - 1)? 0 : 1;
-        column_back = (j = 0)? 0 : -1;
-        column_forward = (j = columns - 1)? 0 : 1;
+        row_back = (i == 0)? 0 : -1;
+        row_forward = (i == rows - 1)? 0 : 1;
+        column_back = (j == 0)? 0 : -1;
+        column_forward = (j == columns - 1)? 0 : 1;
         for (int k = i + row_back; k <= i + row_forward; k++)
         {
           for (int m = j + column_back; m <= j + column_forward; m++)
@@ -126,16 +126,27 @@ void InitMap()//先生成count_map,再生成real_map和初始化map_printed
  */
 void VisitBlock(int r, int c) 
 {
+  int column_back = -1, column_forward = 1, row_back = -1, row_forward = 1;/*back和forward代表着遍历行和列时需要回退和前进多少
+  也就是在[i + row_back, i + row_forward]与[j + column_back, j + column_forward]进行遍历*/
+  /*for (int i = 0; i <= rows - 1; i++)
+  {
+    for (int j = 0; j <= columns - 1; j++)
+    {
+      std::cout << map_printed[i][j];
+    }
+    std::cout << std::endl;
+  }*/
+  //std::cout << r << ' ' << c << ' ' << '!' << std::endl;
   if (map_printed[r][c] == '?')//大前提：此格子未被访问
   {
-    row_back = (r = 0)? 0 : -1;
-    row_forward = (r = rows - 1)? 0 : 1;
-    column_back = (c = 0)? 0 : -1;
-    column_forward = (c = columns - 1)? 0 : 1;
+    row_back = (r == 0)? 0 : -1;
+    row_forward = (r == rows - 1)? 0 : 1;
+    column_back = (c == 0)? 0 : -1;
+    column_forward = (c == columns - 1)? 0 : 1;
     if (real_map[r][c] == 'm')//访问格为地雷
     {
       map_printed[r][c] = 'X';
-      game_state = 1;
+      game_state = -1;
     }
     else if(real_map[r][c] >= '1' && real_map[r][c] <= '8')//访问格非雷但周围有地雷
     {
@@ -152,7 +163,7 @@ void VisitBlock(int r, int c)
         {
           if (k != r || m != c)//不包含此格子本身
           {
-            VisitBlock(k, m);
+            VisitBlock(k, m);//访问[k][m]格
           }
         }
       }
@@ -206,7 +217,7 @@ void MarkMine(int r, int c) //把map_printed[r][c]标为雷
     else
     {
       map_printed[r][c] = 'X';
-      game_state = 1;
+      game_state = -1;
     }
   }
   // TODO (student): Implement me!
@@ -230,13 +241,15 @@ void MarkMine(int r, int c) //把map_printed[r][c]标为雷
  */
 void AutoExplore(int r, int c) //自动探索map_printed[r][c]
 {
+  int column_back = -1, column_forward = 1, row_back = -1, row_forward = 1;/*back和forward代表着遍历行和列时需要回退和前进多少
+  也就是在[i + row_back, i + row_forward]与[j + column_back, j + column_forward]进行遍历*/
   int count_mines = 0;//记录格子周围一共有多少雷
   if (real_map[r][c] >= '1' && real_map[r][c] <= '8' && map_printed[r][c] == real_map[r][c])//已被访问的格且为数字格
   {
-    row_back = (r = 0)? 0 : -1;
-    row_forward = (r = rows - 1)? 0 : 1;
-    column_back = (c = 0)? 0 : -1;
-    column_forward = (c = columns - 1)? 0 : 1;
+    row_back = (r == 0)? 0 : -1;
+    row_forward = (r == rows - 1)? 0 : 1;
+    column_back = (c == 0)? 0 : -1;
+    column_forward = (c == columns - 1)? 0 : 1;
     for (int k = r + row_back; k <= r + row_forward; k++)
     {
       for (int m = c + column_back; m <= c + column_forward; m++)
@@ -247,7 +260,8 @@ void AutoExplore(int r, int c) //自动探索map_printed[r][c]
         }
       }
     }
-    if (count_mines == real_map[r][c])
+    //std::cout << count_mines << std::endl；
+    if (count_mines == int(real_map[r][c] - '0'))
     {
       for (int k = r + row_back; k <= r + row_forward; k++)
       {
@@ -257,6 +271,7 @@ void AutoExplore(int r, int c) //自动探索map_printed[r][c]
           {
             VisitBlock(k, m);
           }
+          //std::cout << k << ' ' << m << std::endl;
         }
       }
     }
@@ -275,25 +290,19 @@ void AutoExplore(int r, int c) //自动探索map_printed[r][c]
  */
 void ExitGame() 
 {
-  if (visit_count == (rows * columns - total_mines) || marked_mine_count == total_mines)
-  {
-    game_state = 1;
-  }
   if (game_state == 1)
   {
-    if (visit_count == (rows * columns - total_mines) || marked_mine_count == total_mines)
-    {
-      std::cout << "YOU WIN!";
-    }
-    else
-    {
-      std::cout << "GAME OVER!";
-    }
-    std::cout << visit_count << ' ' << marked_mine_count;
-    exit(0);  // Exit the game immediately
+    std::cout << "YOU WIN!" << std::endl;
+    std::cout << visit_count << ' ' << total_mines;
+    exit(0); // Exit the game immediately
   }
+  else if (game_state == -1)
+  {
+    std::cout << "GAME OVER!" << std::endl;
+    std::cout << visit_count << ' ' << marked_mine_count;
+    exit(0); // Exit the game immediately
+  }  
   // TODO (student): Implement me!
-  
 }
 
 /**
@@ -322,22 +331,36 @@ void ExitGame()
  */
 void PrintMap() 
 {
-  /*for (int i = 0; i <= rows - 1; i++)
+  if (visit_count == (rows * columns - total_mines))
+  {
+    game_state = 1;
+    for (int i = 0; i <= rows - 1; i++)
+    {
+      for (int j = 0; j <= columns - 1; j++)
+      {
+        if (real_map[i][j] == 'm')
+        {
+          map_printed[i][j] = '@';
+        }
+      }
+    }
+  }
+  for (int i = 0; i <= rows - 1; i++)
   {
     for (int j = 0; j <= columns - 1; j++)
     {
       std::cout << map_printed[i][j];
     }
     std::cout << std::endl;
-  }*/
-  for (int i = 0; i <= rows - 1; i++)
+  }
+  /*for (int i = 0; i <= rows - 1; i++)
   {
     for (int j = 0; j <= columns - 1; j++)
     {
       std::cout << real_map[i][j];
     }
     std::cout << std::endl;
-  }
+  }*/
   /*for (int i = 0; i <= rows - 1; i++)
   {
     for (int j = 0; j <= columns - 1; j++)
